@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Shorter</title>
+</head>
+<body>
+{% if user.is_authenticated %}
+    <h2>Your urls: </h2>
+    {% for url in urls %}
+        <h3><a href="{{ url.short_url }}">{{ request.build_absolute_uri }}/{{ url.short_url }}</a> <a href="{% url 'deleteUrl' url.id %}"><button style="color:red;">Delete url</button></a></h3>
+
+    {% endfor %}
+
+
+    <h2>Create short url</h2>
+    <form method="POST" action="{% url 'shorter' %}">
+        {% csrf_token %}
+        <input type="text" name="url" placeholder="Enter url" required>
+        <button type="submit" style="color:blue;">Create</button>
+    </form>
+{% else %}
+    <h2 style="color:red;">You should login or register</h2>
+{% endif %}
+
+
+    <a href="{% url 'index' %}"><button style="background:blue;border: none;height: 30px; width: 70px; margin-top: 30px">Tasks</button></a>
+    <a href="{% url 'forum' %}"><button style="background:blue;border: none;height: 30px; width: 70px">Forum</button></a>
+
+
+
+{% if user.is_authenticated %}
+    <p>
+        Hello, {{ user.username }}
+    <form method="post" action="{% url 'logout' %}">
+        {% csrf_token %}
+        <button type="submit">Logout</button>
+    </form>
+    </p>
+{% else %}
+    <a href="{% url 'login' %}">Login</a> | <a href="{% url 'register' %}">Register</a>
+{% endif %}
+</body>
+</html>

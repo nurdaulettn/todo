@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Tasks</title>
+</head>
+<body>
+{% if user.is_authenticated %}
+    {% for task in tasks %}
+        <h3>
+            {{ task.title }}|{{ task.created_at }}|{% if task.completed %}Completed{% else %}Not Completed{% endif %}
+            <a href="{% url 'complete' task.id %}">
+                <button>
+                    {% if task.completed %}Make as NOT done{% else %}Make as done{% endif %}
+                </button>
+            </a>
+            <a href="{% url 'delete' task.id %}"><button style="color:red;">Delete task</button></a>
+        </h3>
+    {% endfor %}
+
+    <a href="{% url 'forum' %}"><button style="background:blue;border: none;height: 30px; width: 70px">Forum</button></a>
+    <a href="{% url 'shorter' %}"><button style="background:blue;border: none;height: 30px; width: 80px">Url Shorter</button></a>
+
+    <h2>Add task</h2>
+    <form method="POST" action="{% url 'add' %}">
+        {% csrf_token %}
+        <input type="text" name="title" placeholder="New task" required>
+        <button type="submit" style="color:blue;">Add task</button>
+    </form>
+{% else %}
+    <h2>You should login or register</h2>
+{% endif %}
+    {% if user.is_authenticated %}
+        <p>
+            Hello, {{ user.username }}
+        <form method="post" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button type="submit">Logout</button>
+        </form>
+        </p>
+    {% else %}
+        <a href="{% url 'login' %}">Login</a> | <a href="{% url 'register' %}">Register</a>
+    {% endif %}
+
+
+</body>
+</html>
